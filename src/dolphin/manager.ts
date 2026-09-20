@@ -10,6 +10,8 @@ import { addElfPath, addSdCardPath } from "./config/config";
 import { IniFile } from "./config/iniFile";
 import { DolphinInstallation } from "./install/installation";
 import { DolphinInstance, PlaybackDolphinInstance } from "./instance";
+import type { MatchLaunchArgs } from "./matchLaunch";
+import { matchLaunchArgsToArgv } from "./matchLaunch";
 import type { DolphinEvent, ReplayCommunication } from "./types";
 import { DolphinEventType, DolphinLaunchType } from "./types";
 
@@ -76,7 +78,7 @@ export class DolphinManager {
     await playbackInstance.play(replayComm);
   }
 
-  public async launchNetplayDolphin() {
+  public async launchNetplayDolphin(matchArgs?: MatchLaunchArgs) {
     if (this.netplayDolphinInstance) {
       throw new Error("Netplay dolphin is already open!");
     }
@@ -88,6 +90,12 @@ export class DolphinManager {
     log.info(`Launching dolphin at path: ${dolphinPath}`);
     const launchMeleeOnPlay = this.settingsManager.get().settings.launchMeleeOnPlay;
     const meleeIsoPath = launchMeleeOnPlay ? await this._getIsoPath() : undefined;
+
+    // Match-launch path: pass Bridge-locked --bb-* argv. No PlayKey/user.json required.
+    const additionalParams = matchArgs ? matchLaunchArgsToArgv(matchArgs) : undefined;
+    if (additionalParams) {
+      log.info(`Match launch argv: ${additionalParams.join(" ")}`);
+    }
 
     // Create the Dolphin instance and start it
     this.netplayDolphinInstance = new DolphinInstance(dolphinPath, meleeIsoPath);
@@ -105,7 +113,7 @@ export class DolphinManager {
       log.error(err);
       throw err;
     });
-    this.netplayDolphinInstance.start();
+    this.netplayDolphinInstance.start(additionalParams);
   }
 
   public async configureDolphin(launchType: DolphinLaunchType) {

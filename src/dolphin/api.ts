@@ -17,6 +17,7 @@ import {
   ipc_storePlayKeyFile,
   ipc_viewSlpReplay,
 } from "./ipc";
+import type { MatchLaunchArgs } from "./matchLaunch";
 import type {
   DolphinEventMap,
   DolphinEventType,
@@ -58,8 +59,8 @@ const dolphinApi: DolphinService = {
   async viewSlpReplay(files: ReplayQueueItem[]): Promise<void> {
     await ipc_viewSlpReplay.renderer!.trigger({ files });
   },
-  async launchNetplayDolphin(): Promise<void> {
-    await ipc_launchNetplayDolphin.renderer!.trigger({});
+  async launchNetplayDolphin(matchArgs?: MatchLaunchArgs): Promise<void> {
+    await ipc_launchNetplayDolphin.renderer!.trigger({ matchArgs });
   },
   async checkDesktopAppDolphin() {
     const { result } = await ipc_checkDesktopAppDolphin.renderer!.trigger({});

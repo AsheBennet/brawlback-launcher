@@ -5,6 +5,7 @@ import type {
   DolphinEventMap,
   DolphinLaunchType,
   DolphinService,
+  MatchLaunchArgs,
   PlayKey,
   ReplayQueueItem,
 } from "@dolphin/types";
@@ -78,7 +79,7 @@ class MockDolphinClient implements DolphinService {
   }
 
   @delayAndMaybeError(SHOULD_ERROR)
-  public async launchNetplayDolphin(_options: { bootToCss?: boolean | undefined }): Promise<void> {
+  public async launchNetplayDolphin(_matchArgs?: MatchLaunchArgs): Promise<void> {
     throw new Error("Method not implemented.");
   }
 

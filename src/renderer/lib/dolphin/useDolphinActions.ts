@@ -1,4 +1,4 @@
-import type { DolphinService, ReplayQueueItem } from "@dolphin/types";
+import type { DolphinService, MatchLaunchArgs, ReplayQueueItem } from "@dolphin/types";
 import { DolphinLaunchType } from "@dolphin/types";
 import { useCallback } from "react";
 
@@ -54,14 +54,18 @@ export const useDolphinActions = (dolphinService: DolphinService) => {
     [dolphinService, showError],
   );
 
-  const launchNetplay = useCallback(() => {
-    if (getInstallStatus(DolphinLaunchType.NETPLAY) !== DolphinStatus.READY) {
-      showError("Dolphin is updating. Try again later.");
-      return;
-    }
+  const launchNetplay = useCallback(
+    (matchArgs?: MatchLaunchArgs) => {
+      if (getInstallStatus(DolphinLaunchType.NETPLAY) !== DolphinStatus.READY) {
+        showError("Dolphin is updating. Try again later.");
+        return;
+      }
 
-    dolphinService.launchNetplayDolphin().catch(showError);
-  }, [getInstallStatus, dolphinService, showError]);
+      // Match launch does not require PlayKey/user.json; Header still gates UI play.
+      dolphinService.launchNetplayDolphin(matchArgs).catch(showError);
+    },
+    [getInstallStatus, dolphinService, showError],
+  );
 
   const viewReplays = useCallback(
     (...files: ReplayQueueItem[]) => {
