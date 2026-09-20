@@ -1,3 +1,4 @@
+import type { AdvertiseEndpoint } from "@ladder/types";
 import type { DefaultMods } from "@settings/types";
 
 import type { MatchLaunchArgs } from "./matchLaunch";
@@ -95,7 +96,7 @@ export interface DolphinService {
   viewSlpReplay(files: ReplayQueueItem[]): Promise<void>;
   launchNetplayDolphin(matchArgs?: MatchLaunchArgs): Promise<void>;
   /** Ladder: session → enqueue → poll → launchNetplayDolphin(matchArgs) */
-  launchRankedMatch(options?: { baseUrl?: string }): Promise<{ matchId: string }>;
+  launchRankedMatch(options?: { baseUrl?: string; advertise?: AdvertiseEndpoint }): Promise<{ matchId: string }>;
   checkDesktopAppDolphin(): Promise<{ dolphinPath: string; exists: boolean }>;
   importDolphinSettings(options: { toImportDolphinPath: string; dolphinType: DolphinLaunchType }): Promise<void>;
   setMod(index: number): Promise<void>;

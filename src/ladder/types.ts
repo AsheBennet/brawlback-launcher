@@ -1,5 +1,11 @@
 /** Ladder OpenAPI types (poll MVP). Auth: Authorization: Bearer <sessionToken> */
 
+/** Optional listen endpoint for POST /queue; omit for Ladder PLACEHOLDER_* assignment. */
+export type AdvertiseEndpoint = {
+  host: string;
+  port: number;
+};
+
 export type SessionResponse = {
   sessionToken: string;
   playerId: string;

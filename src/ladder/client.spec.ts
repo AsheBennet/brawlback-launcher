@@ -68,6 +68,49 @@ describe("createLadderClient", () => {
     expect(headersSeen[4].Authorization).toBe("Bearer secret");
   });
 
+  it("includes advertise in enqueue JSON when set", async () => {
+    let enqueueBody: string | undefined;
+    const fetchMock: FetchLike = async (url, init) => {
+      if (url.endsWith("/auth/session")) {
+        return jsonResponse(200, { sessionToken: "tok", playerId: "p" });
+      }
+      if (url.endsWith("/queue") && init?.method === "POST") {
+        enqueueBody = init.body as string | undefined;
+        return jsonResponse(200, { status: "queued" });
+      }
+      throw new Error(`unexpected ${url} ${init?.method}`);
+    };
+
+    const client = createLadderClient({ baseUrl: "http://ladder.test", fetch: fetchMock });
+    await client.createSession();
+    await client.enqueue({ host: "203.0.113.10", port: 4096 });
+
+    expect(JSON.parse(enqueueBody!)).toEqual({
+      advertise: { host: "203.0.113.10", port: 4096 },
+    });
+  });
+
+  it("omits enqueue body when advertise is not set", async () => {
+    let enqueueInit: RequestInit | undefined;
+    const fetchMock: FetchLike = async (url, init) => {
+      if (url.endsWith("/auth/session")) {
+        return jsonResponse(200, { sessionToken: "tok", playerId: "p" });
+      }
+      if (url.endsWith("/queue") && init?.method === "POST") {
+        enqueueInit = init;
+        return jsonResponse(200, { status: "queued" });
+      }
+      throw new Error(`unexpected ${url} ${init?.method}`);
+    };
+
+    const client = createLadderClient({ baseUrl: "http://ladder.test", fetch: fetchMock });
+    await client.createSession();
+    await client.enqueue();
+
+    expect(enqueueInit?.body).toBeUndefined();
+    expect((enqueueInit?.headers as Record<string, string>)["Content-Type"]).toBeUndefined();
+  });
+
   it("throws when queue called before session", async () => {
     const client = createLadderClient({
       fetch: async () => jsonResponse(200, {}),

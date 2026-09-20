@@ -84,7 +84,10 @@ class MockDolphinClient implements DolphinService {
   }
 
   @delayAndMaybeError(SHOULD_ERROR)
-  public async launchRankedMatch(_options?: { baseUrl?: string }): Promise<{ matchId: string }> {
+  public async launchRankedMatch(_options?: {
+    baseUrl?: string;
+    advertise?: { host: string; port: number };
+  }): Promise<{ matchId: string }> {
     throw new Error("Method not implemented.");
   }
 
