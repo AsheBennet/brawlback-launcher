@@ -68,7 +68,7 @@ export const useDolphinActions = (dolphinService: DolphinService) => {
   );
 
   const launchRankedMatch = useCallback(
-    (options?: { baseUrl?: string }) => {
+    (options?: { baseUrl?: string; advertise?: { host: string; port: number } }) => {
       if (getInstallStatus(DolphinLaunchType.NETPLAY) !== DolphinStatus.READY) {
         showError("Dolphin is updating. Try again later.");
         return;

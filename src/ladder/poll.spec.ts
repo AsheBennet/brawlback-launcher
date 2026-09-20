@@ -108,4 +108,28 @@ describe("enqueueAndPollUntilMatched", () => {
     ).rejects.toMatchObject({ name: "AbortError" });
     expect(calls).toEqual(["enqueue", "status", "leave"]);
   });
+  it("forwards advertise to enqueue", async () => {
+    const seen: Array<{ host: string; port: number } | undefined> = [];
+    const client = {
+      enqueue: async (advertise?: { host: string; port: number }) => {
+        seen.push(advertise);
+        return { status: "queued" as const };
+      },
+      getQueueStatus: async () => ({ status: "matched" as const, match: matchedPayload }),
+      leaveQueue: async () => ({ status: "left" as const }),
+    };
+
+    await enqueueAndPollUntilMatched(client, {
+      advertise: { host: "10.0.0.1", port: 7777 },
+      intervalMs: 1,
+      sleep: async () => undefined,
+    });
+    expect(seen).toEqual([{ host: "10.0.0.1", port: 7777 }]);
+
+    await enqueueAndPollUntilMatched(client, {
+      intervalMs: 1,
+      sleep: async () => undefined,
+    });
+    expect(seen[1]).toBeUndefined();
+  });
 });

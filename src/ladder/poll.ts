@@ -1,7 +1,7 @@
 import { delay } from "@common/delay";
 
 import type { LadderClient } from "./client";
-import type { MatchPayload, QueueStatusResponse } from "./types";
+import type { AdvertiseEndpoint, MatchPayload, QueueStatusResponse } from "./types";
 import { isMatchedStatus } from "./types";
 
 export type PollUntilMatchedOptions = {
@@ -13,7 +13,10 @@ export type PollUntilMatchedOptions = {
   sleep?: (ms: number) => Promise<void>;
 };
 
-export type EnqueueAndPollOptions = PollUntilMatchedOptions;
+export type EnqueueAndPollOptions = PollUntilMatchedOptions & {
+  /** Optional listen endpoint; omit for Ladder PLACEHOLDER_* assignment. No STUN — caller supplies host/port. */
+  advertise?: AdvertiseEndpoint;
+};
 
 function throwIfAborted(signal?: AbortSignal): void {
   if (signal?.aborted) {
@@ -56,7 +59,7 @@ export async function enqueueAndPollUntilMatched(
   options: EnqueueAndPollOptions = {},
 ): Promise<MatchPayload> {
   throwIfAborted(options.signal);
-  await client.enqueue();
+  await client.enqueue(options.advertise);
 
   try {
     return await pollUntilMatched(() => client.getQueueStatus(), options);

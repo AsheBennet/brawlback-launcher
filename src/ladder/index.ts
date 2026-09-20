@@ -1,4 +1,4 @@
-export type { LadderService } from "./api";
+export type { LadderService, LaunchRankedMatchOptions } from "./api";
 export type { FetchLike, LadderClient, LadderClientOptions } from "./client";
 export { createLadderClient, LadderHttpError } from "./client";
 export { DEFAULT_LADDER_BASE_URL, getLadderBaseUrl } from "./config";
@@ -8,6 +8,7 @@ export { enqueueAndPollUntilMatched, pollUntilMatched } from "./poll";
 export type { ResolveRankedMatchOptions } from "./rankedLaunch";
 export { resolveRankedMatch } from "./rankedLaunch";
 export type {
+  AdvertiseEndpoint,
   MatchEndpoint,
   MatchPayload,
   MatchPlayer,

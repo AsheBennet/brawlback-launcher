@@ -1,5 +1,6 @@
 import { getLadderBaseUrl } from "./config";
 import type {
+  AdvertiseEndpoint,
   QueueEnqueueResponse,
   QueueLeaveResponse,
   QueueStatusResponse,
@@ -21,7 +22,7 @@ export type LadderClient = {
   getSessionToken(): string | null;
   getPlayerId(): string | null;
   createSession(): Promise<SessionResponse>;
-  enqueue(): Promise<QueueEnqueueResponse>;
+  enqueue(advertise?: AdvertiseEndpoint): Promise<QueueEnqueueResponse>;
   leaveQueue(): Promise<QueueLeaveResponse>;
   getQueueStatus(): Promise<QueueStatusResponse>;
   reportResult(matchId: string, body: ReportResultRequest): Promise<ReportResultResponse>;
@@ -83,11 +84,14 @@ export function createLadderClient(options: LadderClientOptions = {}): LadderCli
       return data;
     },
 
-    async enqueue() {
+    async enqueue(advertise?: AdvertiseEndpoint) {
       if (!sessionToken) {
         throw new Error("Ladder session required; call createSession() first");
       }
-      return request<QueueEnqueueResponse>("POST", "/queue", { auth: true });
+      return request<QueueEnqueueResponse>("POST", "/queue", {
+        auth: true,
+        body: advertise !== undefined ? { advertise } : undefined,
+      });
     },
 
     async leaveQueue() {
