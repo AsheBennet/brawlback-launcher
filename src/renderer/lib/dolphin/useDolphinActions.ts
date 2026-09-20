@@ -67,6 +67,19 @@ export const useDolphinActions = (dolphinService: DolphinService) => {
     [getInstallStatus, dolphinService, showError],
   );
 
+  const launchRankedMatch = useCallback(
+    (options?: { baseUrl?: string }) => {
+      if (getInstallStatus(DolphinLaunchType.NETPLAY) !== DolphinStatus.READY) {
+        showError("Dolphin is updating. Try again later.");
+        return;
+      }
+
+      // Ladder: anonymous session → enqueue → poll → MatchLaunchArgs → Dolphin.
+      dolphinService.launchRankedMatch(options).catch(showError);
+    },
+    [getInstallStatus, dolphinService, showError],
+  );
+
   const viewReplays = useCallback(
     (...files: ReplayQueueItem[]) => {
       if (getInstallStatus(DolphinLaunchType.PLAYBACK) !== DolphinStatus.READY) {
@@ -101,6 +114,7 @@ export const useDolphinActions = (dolphinService: DolphinService) => {
     clearDolphinCache,
     reinstallDolphin,
     launchNetplay,
+    launchRankedMatch,
     viewReplays,
     importDolphin,
   };

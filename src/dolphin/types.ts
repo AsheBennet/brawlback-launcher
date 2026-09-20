@@ -94,6 +94,8 @@ export interface DolphinService {
   removePlayKeyFile(): Promise<void>;
   viewSlpReplay(files: ReplayQueueItem[]): Promise<void>;
   launchNetplayDolphin(matchArgs?: MatchLaunchArgs): Promise<void>;
+  /** Ladder: session → enqueue → poll → launchNetplayDolphin(matchArgs) */
+  launchRankedMatch(options?: { baseUrl?: string }): Promise<{ matchId: string }>;
   checkDesktopAppDolphin(): Promise<{ dolphinPath: string; exists: boolean }>;
   importDolphinSettings(options: { toImportDolphinPath: string; dolphinType: DolphinLaunchType }): Promise<void>;
   setMod(index: number): Promise<void>;

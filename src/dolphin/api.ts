@@ -1,4 +1,5 @@
 /* eslint-disable import/no-default-export */
+import { ipc_launchRankedMatch } from "@ladder/ipc";
 import type { DefaultMods } from "@settings/types";
 
 import {
@@ -61,6 +62,10 @@ const dolphinApi: DolphinService = {
   },
   async launchNetplayDolphin(matchArgs?: MatchLaunchArgs): Promise<void> {
     await ipc_launchNetplayDolphin.renderer!.trigger({ matchArgs });
+  },
+  async launchRankedMatch(options?: { baseUrl?: string }): Promise<{ matchId: string }> {
+    const { result } = await ipc_launchRankedMatch.renderer!.trigger({ baseUrl: options?.baseUrl });
+    return { matchId: result.matchId };
   },
   async checkDesktopAppDolphin() {
     const { result } = await ipc_checkDesktopAppDolphin.renderer!.trigger({});

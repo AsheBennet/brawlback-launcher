@@ -1,6 +1,7 @@
 import broadcastApi from "@broadcast/api";
 import consoleApi from "@console/api";
 import dolphinApi from "@dolphin/api";
+import ladderApi from "@ladder/api";
 import replaysApi from "@replays/api";
 import settingsApi from "@settings/api";
 import { clipboard, contextBridge, shell } from "electron";
@@ -15,6 +16,7 @@ const api = {
   settings: settingsApi,
   broadcast: broadcastApi,
   dolphin: dolphinApi,
+  ladder: ladderApi,
   replays: replaysApi,
   path: {
     join: path.join,
