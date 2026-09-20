@@ -95,11 +95,9 @@ export default function setupDolphinIpc({ dolphinManager }: { dolphinManager: Do
     return { success: true };
   });
 
-  ipc_launchNetplayDolphin.main!.handle(async () => {
-    // Boot straight to CSS if necessary
-
-    // Actually launch Dolphin
-    await dolphinManager.launchNetplayDolphin();
+  ipc_launchNetplayDolphin.main!.handle(async ({ matchArgs }) => {
+    // Match-launch path skips PlayKey/user.json; local play omits matchArgs.
+    await dolphinManager.launchNetplayDolphin(matchArgs);
     return { success: true };
   });
 

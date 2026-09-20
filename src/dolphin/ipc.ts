@@ -2,6 +2,7 @@ import type { DefaultMods } from "@settings/types";
 import type { EmptyPayload, SuccessPayload } from "utils/ipc";
 import { _, makeEndpoint } from "utils/ipc";
 
+import type { MatchLaunchArgs } from "./matchLaunch";
 import type { DolphinEvent, DolphinLaunchType, PlayKey, ReplayQueueItem } from "./types";
 
 // Handlers
@@ -48,7 +49,11 @@ export const ipc_removePlayKeyFile = makeEndpoint.main("removePlayKeyFile", <Emp
 
 export const ipc_viewSlpReplay = makeEndpoint.main("viewSlpReplay", <{ files: ReplayQueueItem[] }>_, <SuccessPayload>_);
 
-export const ipc_launchNetplayDolphin = makeEndpoint.main("launchNetplayDolphin", <EmptyPayload>_, <SuccessPayload>_);
+export const ipc_launchNetplayDolphin = makeEndpoint.main(
+  "launchNetplayDolphin",
+  <{ matchArgs?: MatchLaunchArgs }>_,
+  <SuccessPayload>_,
+);
 
 export const ipc_checkDesktopAppDolphin = makeEndpoint.main(
   "getDesktopAppDolphinPath",

@@ -1,5 +1,7 @@
 import type { DefaultMods } from "@settings/types";
 
+import type { MatchLaunchArgs } from "./matchLaunch";
+
 export interface ReplayCommunication {
   mode: "normal" | "mirror" | "queue"; // default normal
   replay?: string; // path to the replay if in normal or mirror mode
@@ -91,10 +93,12 @@ export interface DolphinService {
   checkPlayKeyExists(key: PlayKey): Promise<boolean>;
   removePlayKeyFile(): Promise<void>;
   viewSlpReplay(files: ReplayQueueItem[]): Promise<void>;
-  launchNetplayDolphin(): Promise<void>;
+  launchNetplayDolphin(matchArgs?: MatchLaunchArgs): Promise<void>;
   checkDesktopAppDolphin(): Promise<{ dolphinPath: string; exists: boolean }>;
   importDolphinSettings(options: { toImportDolphinPath: string; dolphinType: DolphinLaunchType }): Promise<void>;
   setMod(index: number): Promise<void>;
   downloadDefaultMod(mod: DefaultMods): Promise<void>;
   onEvent<T extends DolphinEventType>(eventType: T, handle: (event: DolphinEventMap[T]) => void): () => void;
 }
+
+export type { MatchEndpoint, MatchLaunchArgs } from "./matchLaunch";
