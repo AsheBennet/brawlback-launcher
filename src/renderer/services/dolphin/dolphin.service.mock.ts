@@ -84,6 +84,11 @@ class MockDolphinClient implements DolphinService {
   }
 
   @delayAndMaybeError(SHOULD_ERROR)
+  public async launchRankedMatch(_options?: { baseUrl?: string }): Promise<{ matchId: string }> {
+    throw new Error("Method not implemented.");
+  }
+
+  @delayAndMaybeError(SHOULD_ERROR)
   public async checkDesktopAppDolphin(): Promise<{ dolphinPath: string; exists: boolean }> {
     throw new Error("Method not implemented.");
   }

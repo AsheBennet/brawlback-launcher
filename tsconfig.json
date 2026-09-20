@@ -11,7 +11,8 @@
       "@replays/*": ["replays/*"],
       "@settings/*": ["settings/*"],
       "@console/*": ["console/*"],
-      "@mods/*": ["mods/*"]
+      "@mods/*": ["mods/*"],
+      "@ladder/*": ["ladder/*"]
     },
     "baseUrl": "./src",
     "outDir": "release/app/dist",
